@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.basedata.user.UserMapper">
+    <select id="getUserByName" resultType="com.example.demo.basedata.user.User">
+        select * from user where name = #{name}
+    </select>
+    <select id="findList" resultType="com.example.demo.basedata.user.User">
+        select * from user
+    </select>
+    <insert id="save">
+        insert into user(name,password) value (#{name},#{password})
+    </insert>
+    <delete id="delete">
+        delete from user where id= #{id}
+    </delete>
+    <update id="updata">
+        update user set name = #{name},password = #{password} where id = #{id}
+    </update>
+    <update id="updataRole">
+        update user_role  set role_id = #{role} where id = #{id}
+    </update>
+    <select id="findRoles" resultType="java.lang.String">
+        select name from role
+    </select>
+</mapper>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap-table.css" rel="stylesheet">
+    <script src="http://libs.cdnjs.net/jquery/2.2.1/jquery.js"></script>
+    <script src="/js/bootstrap-table.js"></script>
+    <script src="/js/bootstrap-table-zh-CN.js"></script>
+    <script src="/layer/layer.js"></script>
+    <title>物料基础数据</title>
+</head>
+<div id="toolbar">
+    <button id="edit" disabled class="btn btn-success" th:if="${flag == '申请出库'}" onclick="edit('同意出库')">
+        <i class="glyphicon glyphicon-edit"></i> 同意
+    </button>
+    <button id="remove" disabled class="btn btn-danger" th:if="${flag == '申请出库'}" onclick="edit('拒绝出库')">
+        <i class="glyphicon glyphicon-remove"></i> 拒绝
+    </button>
+    <button id="add"  class="btn btn-success" th:if="${flag == '缺货单'}" onclick="location.href='/out?type=缺货单'">
+        <i class="glyphicon glyphicon-remove"></i> 新建
+    </button>
+</div>
+<body>
+<table id="table" data-toolbar="#toolbar"></table>
+<script th:inline="javascript">
+    var message=[[${message}]]
+    if(message) {
+        layer.msg(message, {
+            icon: 1
+        });
+    }
+    function edit(mflag){
+        var ids=$.map($('#table').bootstrapTable('getSelections'),function(row){
+            return row.id;
+        });
+        location.href='/out/edit?ids='+ids+"&flag="+mflag;
+    }
+    var flag=[[${flag}]]
+    $('#table').bootstrapTable({
+        url:"/out/data?status="+(flag==null?'':flag),
+        sidePagination: "client",
+        search: true,//显示搜索框
+        pagination: true,//分页
+        columns:[{
+            checkbox:true
+        },
+            {
+                field:'id',
+                title:"单据号"
+            },
+            {
+                field: 'res.address',
+                title: '仓库'
+             },
+            {
+                field: 'good.name',
+                title: '物料'
+            },
+            {
+                field: 'num',
+                title: '数量'
+            },
+            {
+                field: 'status',
+                title: '状态'
+            }],
+        responseHandler:function  (res) {
+            return res
+        }
+    })
+    $('#table').on('check.bs.table uncheck.bs.table load-success.bs.table ' +
+        'check-all.bs.table uncheck-all.bs.table', function () {
+        $('#edit,#remove').prop('disabled', !$('#table').bootstrapTable('getSelections').length);
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap-table.css" rel="stylesheet">
+    <script src="http://libs.cdnjs.net/jquery/2.2.1/jquery.js"></script>
+    <script src="/js/bootstrap-table.js"></script>
+    <script src="/js/bootstrap-table-zh-CN.js"></script>
+    <title>物料基础数据</title>
+</head>
+<div id="toolbar">
+</div>
+<body>
+<table id="table" data-toolbar="#toolbar"></table>
+<script>
+    function edit() {
+        var id=$.map($('#table').bootstrapTable('getSelections'),function(row){
+            return row.id;
+        });
+        location.href='/goods/form?id='+id
+    }
+    function deleteAll(){
+        var ids=$.map($('#table').bootstrapTable('getSelections'),function(row){
+            return row.id;
+        });
+        location.href='/goods/delete?ids='+ids
+    }
+    $('#table').bootstrapTable({
+        url:"/account/data",
+        sidePagination: "client",
+        search: true,//显示搜索框
+        pagination: true,//分页
+        columns:[{
+            checkbox:true
+        },{
+            field: 'res.address',
+            title: '仓库'
+        },
+            {
+                field: 'good.name',
+                title: '物料'
+            },
+            {
+                field: 'num',
+                title: '数量'
+            }
+            ],
+        responseHandler:function  (res) {
+            return res
+        }
+    })
+    $('#table').on('check.bs.table uncheck.bs.table load-success.bs.table ' +
+        'check-all.bs.table uncheck-all.bs.table', function () {
+        $('#remove').prop('disabled', ! $('#table').bootstrapTable('getSelections').length);
+        $('#edit').prop('disabled', $('#table').bootstrapTable('getSelections').length!=1);
+    });
+</script>
+</body>
+</html>

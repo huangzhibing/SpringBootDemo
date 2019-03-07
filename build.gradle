@@ -1,0 +1,58 @@
+buildscript {
+	ext {
+		springBootVersion = '2.0.5.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+sourceSets {
+	main {
+		resources {
+			//可以将java目录下的所有非.java资源打包到classes下
+			srcDir 'src/main/java'
+		}
+	}
+}
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+jar {
+	baseName = 'gradle-demo'
+	version = '0.0.1'
+	manifest {
+		attributes "Manifest-Version": 1.0,
+				'Main-Class': 'com.example.demo.DemoApplication'
+	}
+}
+
+
+dependencies {
+	compile('org.springframework.boot:spring-boot-starter')
+	compile('org.springframework.boot:spring-boot-starter-web')
+	compile('org.springframework.boot:spring-boot-starter-tomcat')
+	compile('mysql:mysql-connector-java')
+	compile('org.apache.shiro:shiro-spring:1.3.2')
+	compile('com.alibaba:druid:1.1.4')
+	compile('org.mybatis.spring.boot:mybatis-spring-boot-starter:1.3.0')
+	compile('com.fasterxml.jackson.core:jackson-databind')
+	compile('com.hankcs:hanlp:portable-1.2.4')
+	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+	compile('org.springframework.boot:spring-boot-devtools')
+	compile('org.mybatis.spring.boot:mybatis-spring-boot-starter:1.3.0')
+	compile('org.projectlombok:lombok:1.16.18')
+	compile('com.github.theborakompanioni:thymeleaf-extras-shiro:2.0.0')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+}

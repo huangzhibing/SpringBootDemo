@@ -1,0 +1,25 @@
+server:
+  port: 666
+spring:
+  mvc:
+    view:
+      suffix: .html
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://47.101.194.218:3306/javaweb?characterEncoding=utf-8
+    username: root
+    password: DC91498e3820
+    type: com.alibaba.druid.pool.DruidDataSource
+  thymeleaf:
+    cache: false
+  http:
+    encoding:
+      charset: utf-8
+      enabled: true
+logging:
+  level:
+    com.example.demo.dao: debug
+    root: debug
+
+mybatis:
+  mapper-locations: classpath:**/*.xml

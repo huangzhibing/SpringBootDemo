@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.basedata.billType.BillTypeMapper">
+
+    <select id="get" resultType="com.example.demo.basedata.billType.BillType">
+        select * from billtype where id = #{id}
+    </select>
+    <select id="findList" resultType="com.example.demo.basedata.billType.BillType">
+        select * from billtype
+    </select>
+    <insert id="save">
+        insert into billtype(ioType,ioFlag,ioDesc,currQty,inQty,outQty,wareId,wareName,id)
+        value (#{ioType},#{ioFlag},#{ioDesc},#{currQty},#{inQty},#{outQty},#{wareId},#{wareName},#{id})
+    </insert>
+    <delete id="delete">
+        delete from billtype where id= #{id}
+    </delete>
+    <update id="updata">
+        update billtype set ioFlag = #{ioFlag},ioDesc=#{ioDesc},currQty=#{currQty},inQty=#{inQty},outQty=#{outQty},wareId=#{wareId},wareName=#{wareName},ioType = #{ioType} where id = #{id}
+    </update>
+</mapper>

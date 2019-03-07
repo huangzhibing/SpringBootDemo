@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap-table.css" rel="stylesheet">
+    <script src="http://libs.cdnjs.net/jquery/2.2.1/jquery.js"></script>
+    <script src="/js/bootstrap-table.js"></script>
+    <script src="/js/bootstrap-table-zh-CN.js"></script>
+    <script src="/layer/layer.js"></script>
+    <title>Title</title>
+</head>
+<body>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            <a class="panelButton" href="/out"><i class="ti-angle-left"></i> 返回</a>
+        </h3>
+    </div>
+    <div class="panel-body">
+        <form action="/out" method="post" class="form-horizontal">
+            <input th:if="${type!='缺货单'}" type="hidden" name="status" value="申请出库">
+            <input th:if="${type=='缺货单'}" type="hidden" name="status" value="缺货单">
+            <div class="form-group">
+                <label class="col-lg-2 control-label">仓库：</label>
+                <div class="col-lg-8">
+                    <select id="myselect" th:if="${type!='缺货单'}"  onchange="getGoods()" name="res.id" class="form-control">
+                        <option></option>
+                        <option th:text="${ware.address}" th:value="${ware.id}" th:each="ware:${wares}" ></option>
+                    </select>
+                    <select id="myselect" th:if="${type=='缺货单'}"  name="res.id" class="form-control">
+                        <option></option>
+                        <option th:text="${ware.address}" th:value="${ware.id}" th:each="ware:${wares}" ></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">物料：</label>
+                <div class="col-lg-8">
+                    <select th:if="${type!='缺货单'}" id="test" disabled name="good.id" class="form-control">
+                        <option></option>
+                        <option th:text="${good.name}" th:value="${good.id}" th:each="good:${goods}"></option>
+                    </select>
+                    <select th:if="${type=='缺货单'}" id="test" name="good.id" class="form-control">
+                        <option></option>
+                        <option th:text="${good.name}" th:value="${good.id}" th:each="good:${goods}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">数量：</label>
+                <div class="col-lg-8">
+                    <input name="num"  class="form-control "/>
+                </div>
+            </div>
+            <div style="text-align: center">
+                <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="正在提交...">提交领料单</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script th:inline="javascript">
+    var message=[[${message}]]
+    if(message) {
+        layer.msg(message, {
+            icon: 1
+        });
+    }
+    function getGoods() {
+        var el=$('#myselect')[0];
+        var index=el.selectedIndex;
+        $.ajax({
+            url:"/out/getGood",
+            data:{
+                resId:el[index].value
+            },
+            success:function (res) {
+                $('#test').html("")
+                for(let item of res){
+                    $('#test').append("<option value="+item.id+">"+item.name)
+                }
+                if(res.length>0) $('#test').attr("disabled",false)
+            }
+        })
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:c="http://www.w3.org/1999/XSL/Transform" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap-table.css" rel="stylesheet">
+    <script src="http://libs.cdnjs.net/jquery/2.2.1/jquery.js"></script>
+    <script src="/js/bootstrap-table.js"></script>
+    <script src="/js/bootstrap-table-zh-CN.js"></script>
+    <script src="/layer/layer.js"></script>
+    <title>入库申请单</title>
+</head>
+<body>
+<div class="wrapper wrapper-content">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div th:if="${flag eq 'luru'}">
+                <h3 class="panel-title">入库申请单录入列表</h3>
+            </div>
+            <div th:if="${flag} eq 'yanshou'">
+                <h3 class="panel-title">入库申请单验收列表</h3>
+            </div>
+            <div th:if="${flag eq 'tuihuo'}">
+                <h3 class="panel-title">退货单管理列表</h3>
+            </div>
+            <div th:if="${flag eq 'chaxun'}">
+                <h3 class="panel-title">入库申请单查询列表</h3>
+            </div>
+        </div>
+        <div  id="tool">
+            <div th:if="${flag eq 'luru'}">
+                <button id="add" class="btn btn-primary" onclick="location.href='/input/form?flag=luru'">
+                    <i class="glyphicon glyphicon-plus"></i> 新建
+                </button>
+                <button id="edit" class="btn btn-success" onclick="edit('luru')">
+                    <i class="glyphicon glyphicon-edit"></i> 修改
+                </button>
+                <button id="yanshou" class="btn btn-success" onclick="yanshou()">
+                    <i class="glyphicon glyphicon-remove"></i> 验收
+                </button>
+                <button id="remove" class="btn btn-danger" onclick="deleteAll()">
+                    <i class="glyphicon glyphicon-remove"></i> 删除
+                </button>
+            </div>
+            <div th:if="${flag eq 'yanshou'}">
+                <button id="edit" class="btn btn-success" onclick="edit('yanshou')">
+                    <i class="glyphicon glyphicon-edit"></i> 检验明细
+                </button>
+            </div>
+            <div th:if="${flag eq 'tuihuo'}">
+                <button id="yanshou" class="btn btn-danger" onclick="tuihuo()">
+                    <i class="glyphicon glyphicon-remove"></i> 退货
+                </button>
+            </div>
+            <div th:if="${flag eq 'chaxun'}">
+                <button class="btn btn-default" data-toggle="collapse" data-parent="#chaxun" href="#chaxun">
+                    <i class="glyphicon glyphicon-search"></i> 检索
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<table id="table" data-toolbar="#tool"></table>
+<script th:inline="javascript">
+    var message=[[${message}]]
+    if(message) {
+        console.log(message.substring(2,3));
+        if(message.substring(2,3) == "合"){
+            layer.msg(message, {icon: 1,time:3000});
+        }else if(message.substring(2,3) == "不"){
+            layer.msg(message, {icon: 2,time:3000});
+        }else{
+            layer.msg(message, {icon: 1});
+        }
+    }
+
+    function edit(flag) {
+        var id = $.map($('#table').bootstrapTable('getSelections'),function (row) {
+            return row.id;
+        });
+        location.href='/input/form?id='+id+"&flag="+flag;
+    }
+    function yanshou() {
+        var ids = $.map($('#table').bootstrapTable('getSelections'),function (row) {
+            return row.id;
+        });
+        location.href='/input/yanshou?ids='+ids;
+    }
+    function tuihuo() {
+        var ids = $.map($('#table').bootstrapTable('getSelections'),function (row) {
+            return row.id;
+        });
+        location.href='/input/tuihuo?ids='+ids;
+    }
+    function deleteAll() {
+        var ids = $.map($('#table').bootstrapTable('getSelections'),function (row,index) {
+            return row.id;
+        });
+        location.href='/input/delete?ids='+ids;
+    }
+    var flag = [[${flag}]]
+    $('#table').bootstrapTable({
+        url:'/input/data?status='+flag,
+        sidePagination: "client",
+        search:true,
+        pagination: true,//分页
+        columns:[{
+            checkbox:true
+            },
+            {
+                field:'res.address',
+                title:'仓库',
+            },
+            {
+                field:'good.name',
+                title:'物料',
+            },
+            {
+                field:'num',
+                title:'入库量',
+            },
+            {
+                field:'status',
+                title:'单据状态',
+                formatter:function (value,row,index) {
+                    if(row.status == "luru"){
+                        return "已录入";
+                    }else if(row.status == "yanshou"){
+                        return "已验收";
+                    }else if(row.status == "tuihuo"){
+                        return "验收不合格";
+                    }else if(row.status == "yituihuo"){
+                        return "已退货";
+                    }else if(row.status == "chaxun"){
+                        return "已入库";
+                    }else if(row.status == "daibuhuo"){
+                        return "将退货";
+                    }
+                }
+            }
+        ],
+        responseHandler:function  (res) {
+            return res
+        }
+    })
+    $('#table').on('check.bs.table uncheck.bs.table load-success.bs.table ' +
+        'check-all.bs.table uncheck-all.bs.table', function () {
+        $('#remove').prop('disabled', !$('#table').bootstrapTable('getSelections').length);
+        $('#edit').prop('disabled', $('#table').bootstrapTable('getSelections').length!=1);
+        $('#yanshou').prop('disabled', !$('#table').bootstrapTable('getSelections').length);
+    });
+</script>
+</body>
+</html>

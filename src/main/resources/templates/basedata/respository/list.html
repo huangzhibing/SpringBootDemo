@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap-table.css" rel="stylesheet">
+    <script src="http://libs.cdnjs.net/jquery/2.2.1/jquery.js"></script>
+    <script src="/js/bootstrap-table.js"></script>
+    <script src="/js/bootstrap-table-zh-CN.js"></script>
+    <title>物料基础数据</title>
+</head>
+<div id="toolbar">
+    <button id="add" class="btn btn-primary" onclick="location.href='/res/form'">
+        <i class="glyphicon glyphicon-plus"></i> 新建
+    </button>
+    <button id="edit" class="btn btn-success" onclick="edit()">
+        <i class="glyphicon glyphicon-edit"></i> 修改
+    </button>
+    <button id="remove" class="btn btn-danger" onclick="deleteAll()">
+        <i class="glyphicon glyphicon-remove"></i> 删除
+    </button>
+</div>
+<body>
+    <table id="table" data-toolbar="#toolbar"></table>
+    <script>
+        function edit() {
+            var id=$.map($('#table').bootstrapTable('getSelections'),function(row){
+                return row.id;
+            });
+            location.href='/res/form?id='+id
+        }
+        function deleteAll(){
+            var ids=$.map($('#table').bootstrapTable('getSelections'),function(row){
+                return row.id;
+            });
+            location.href='/res/delete?ids='+ids
+        }
+        $('#table').bootstrapTable({
+            url:"/res/data",
+            sidePagination: "client",
+            search: true,//显示搜索框
+            pagination: true,//分页
+            columns:[{
+                checkbox:true
+            },{
+                field: 'address',
+                title: '地址'
+            },
+                {
+                    field: 'area',
+                    title: '占地面积'
+                },
+                {
+                    field: 'des',
+                    title: '备注'
+                }
+                ],
+            responseHandler:function  (res) {
+                return res
+            }
+        })
+        $('#table').on('check.bs.table uncheck.bs.table load-success.bs.table ' +
+            'check-all.bs.table uncheck-all.bs.table', function () {
+            $('#remove').prop('disabled', ! $('#table').bootstrapTable('getSelections').length);
+            $('#edit').prop('disabled', $('#table').bootstrapTable('getSelections').length!=1);
+        });
+    </script>
+</body>
+</html>

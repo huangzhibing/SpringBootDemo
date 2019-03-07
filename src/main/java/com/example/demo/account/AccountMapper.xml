@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.account.AccountMapper">
+    <select id="get" resultType="com.example.demo.account.Account">
+        select * from account where id = #{id}
+    </select>
+    <select id="findList" resultType="com.example.demo.account.Account">
+        select b.address AS "res.address" ,c.name AS "good.name",num  from account a left join respository b on b.id = a.res left join goods c on c.id =a.good
+    </select>
+    <insert id="save">
+        insert into account(res,good,num) value (#{res.id},#{good.id},#{num})
+    </insert>
+    <delete id="delete">
+        delete from account where id= #{id}
+    </delete>
+    <update id="updata">
+        update account set res = #{res.id},good=#{good.id},num = #{num}} where id = #{id}
+    </update>
+
+    <select id="check" resultType="int">
+        select num-#{num} from account where res = #{res.id} and good = #{good.id}
+    </select>
+    <update id="updateByBillMain">
+        update account set num = num - #{num} where res = #{res.id} and good = #{good.id}
+    </update>
+    <insert id="insertByBillMain">
+        INSERT INTO account(
+          good,
+          res,
+          num
+        )VALUE (
+          #{good.id},
+          #{res.id},
+          #{num}
+        )
+    </insert>
+
+    <select id="findGoodsByRes" resultType="com.example.demo.basedata.goods.Good">
+        select b.id AS "id", b.name AS "name" from account a inner join goods b on b.id = a.good where a.res= #{resId}
+    </select>
+
+    <select id="preinsert" resultType="Integer">
+        select count(*) from account where good=#{good.id} and res=#{res.id}
+    </select>
+
+    <update id="updateByInPut">
+        update account set num = num + #{num} where res = #{res.id} and good = #{good.id}
+    </update>
+</mapper>

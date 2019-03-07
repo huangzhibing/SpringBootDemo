@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.basedata.respository.ResMapper">
+    <select id="get" resultType="com.example.demo.basedata.respository.Res">
+        select * from respository where id = #{id}
+    </select>
+    <select id="findList" resultType="com.example.demo.basedata.respository.Res">
+        select * from respository
+    </select>
+    <insert id="save">
+        insert into respository(address,area,des) value (#{address},#{area},#{des})
+    </insert>
+    <delete id="delete">
+        delete from respository where id= #{id}
+    </delete>
+    <update id="updata">
+        update respository set address = #{address},area=#{area},des = #{des} where id = #{id}
+    </update>
+</mapper>

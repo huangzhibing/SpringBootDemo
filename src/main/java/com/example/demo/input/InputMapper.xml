@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.input.InputMapper">
+    <select id="get" resultType="com.example.demo.input.Input">
+        SELECT
+        a.id AS "id" ,
+        respository.id AS "res.id" ,
+        respository.address AS "res.address" ,
+        goods.id AS "good.id",
+        goods.name AS "good.name",
+        a.num AS "num",
+        a.status AS "status",
+        a.iotype AS "iotype"
+        FROM billmain a
+        left join goods ON goods.id = a.good
+        left join respository ON respository.id = a.res
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="com.example.demo.input.Input">
+        SELECT
+        a.id AS "id" ,
+        respository.id AS "res.id" ,
+        respository.address AS "res.address" ,
+        goods.id AS "good.id",
+        goods.name AS "good.name",
+        a.num AS "num",
+        a.status AS "status",
+        a.iotype AS "iotype"
+        FROM billmain a
+        left join goods ON goods.id = a.good
+        left join respository ON respository.id = a.res
+        <where>
+            <if test="status != null and status != '' and status != 'chaxun'">
+                a.status = #{status}
+            </if>
+            <if test="status == 'chaxun' and iotype != ''">
+                AND a.iotype IN ('I' , 'IT')
+            </if>
+        </where>
+        ORDER BY a.status
+    </select>
+
+    <select id="insert">
+        INSERT INTO billmain(
+        res,
+        good,
+        num,
+        status,
+        iotype)VALUE (
+        #{res.id},
+        #{good.id},
+        #{num},
+        #{status},
+        #{iotype}
+        )
+    </select>
+    
+    <update id="update">
+        UPDATE billmain
+        SET
+        res = #{res.id},
+        good = #{good.id},
+        num = #{num},
+        status = #{status},
+        iotype = #{iotype}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM billmain WHERE id = #{id}
+    </delete>
+</mapper>

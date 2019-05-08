@@ -11,7 +11,7 @@ buildscript {
 }
 
 apply plugin: 'java'
-apply plugin: 'idea'
+apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 sourceSets {
@@ -29,14 +29,6 @@ sourceCompatibility = 1.8
 repositories {
 	mavenCentral()
 }
-jar {
-	baseName = 'gradle-demo'
-	version = '0.0.1'
-	manifest {
-		attributes "Manifest-Version": 1.0,
-				'Main-Class': 'com.example.demo.DemoApplication'
-	}
-}
 
 
 dependencies {
@@ -47,12 +39,14 @@ dependencies {
 	compile('org.apache.shiro:shiro-spring:1.3.2')
 	compile('com.alibaba:druid:1.1.4')
 	compile('org.mybatis.spring.boot:mybatis-spring-boot-starter:1.3.0')
+	runtime('mysql:mysql-connector-java')
 	compile('com.fasterxml.jackson.core:jackson-databind')
 	compile('com.hankcs:hanlp:portable-1.2.4')
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 	compile('org.springframework.boot:spring-boot-devtools')
-	compile('org.mybatis.spring.boot:mybatis-spring-boot-starter:1.3.0')
 	compile('org.projectlombok:lombok:1.16.18')
 	compile('com.github.theborakompanioni:thymeleaf-extras-shiro:2.0.0')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+	compile group: 'redis.clients', name: 'jedis', version: '2.9.0'
+	compile group: 'org.springframework.data', name: 'spring-data-redis', version: '2.1.3.RELEASE'
 }

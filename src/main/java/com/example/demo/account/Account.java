@@ -4,8 +4,10 @@ import com.example.demo.basedata.goods.Good;
 import com.example.demo.basedata.respository.Res;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class Account {
+public class Account{
     private Res res;
     private Good good;
     private int num;

@@ -18,12 +18,6 @@ public class MyRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         String userName =(String)principals.getPrimaryPrincipal();
         SimpleAuthorizationInfo authorizationInfo=new SimpleAuthorizationInfo();
-        try {
-            String role = userMapper.getUserByName(userName).getRole();
-            authorizationInfo.addRole(role);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
         return authorizationInfo;
     }
 
@@ -39,6 +33,6 @@ public class MyRealm extends AuthorizingRealm {
     @Override
     public boolean hasRole(PrincipalCollection principals, String roleIdentifier) {
         String userName = (String)principals.getPrimaryPrincipal();
-        return super.hasRole(principals,roleIdentifier)||"admin".equals(userName);
+        return "admin".equals(userName)||super.hasRole(principals,roleIdentifier);
     }
 }

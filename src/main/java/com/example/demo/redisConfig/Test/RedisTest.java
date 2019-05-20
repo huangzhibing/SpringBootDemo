@@ -1,4 +1,4 @@
-package com.example.demo.redisConfig;
+package com.example.demo.redisConfig.Test;
 
 import com.example.demo.account.Account;
 import org.junit.Test;

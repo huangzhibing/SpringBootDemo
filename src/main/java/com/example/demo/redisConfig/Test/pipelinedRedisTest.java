@@ -1,11 +1,13 @@
-package com.example.demo.redisConfig;
+package com.example.demo.redisConfig.Test;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.connection.Pool;
+import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import redis.clients.jedis.Jedis;
@@ -54,5 +56,23 @@ public class pipelinedRedisTest {
         System.out.println(end-start);
     }
 
+    /**
+     * 用spring操作redis流水线
+     */
+    @Test
+    public void testPipeline(){
+
+        SessionCallback sessionCallback = (SessionCallback) (RedisOperations ops) ->{
+            for(int i=0;i<100000;i++){
+                ops.boundValueOps("key"+i).set("value"+i);
+                ops.boundValueOps("key"+i).get();
+            }
+            return null;
+        };
+        long start = System.currentTimeMillis();
+        redisTemplate.execute(sessionCallback);
+        long end = System.currentTimeMillis();
+        System.out.println(end-start);
+    }
 
 }

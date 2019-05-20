@@ -6,7 +6,7 @@ spring:
       suffix: .html
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/javaweb?characterEncoding=utf-8
+    url: jdbc:mysql://127.0.0.1:3306/javaweb?
     username: root
     password: root
     type: com.alibaba.druid.pool.DruidDataSource

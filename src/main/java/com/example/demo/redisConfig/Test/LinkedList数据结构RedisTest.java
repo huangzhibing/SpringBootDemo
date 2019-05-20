@@ -1,4 +1,4 @@
-package com.example.demo.redisConfig;
+package com.example.demo.redisConfig.Test;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
